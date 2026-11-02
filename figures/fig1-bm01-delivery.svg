@@ -1,0 +1,24 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 760 400" style="max-width:760px;width:100%;height:auto" role="img" aria-label="BM01 编码任务交付 / Coding-task delivery">
+<style>
+  svg { --surface:#fcfcfb; --ink:#0b0b0b; --ink2:#52514e; --muted:#898781; --grid:#e1e0d9; --axis:#c3c2b7;
+        --s:#2a78d6; --b:#eb6834; --c3:#1baf7a; --neutral:#c3c2b7; --onfill:#ffffff; }
+  @media (prefers-color-scheme: dark) {
+    svg { --surface:#1a1a19; --ink:#f0efec; --ink2:#c3c2b7; --muted:#898781; --grid:#2c2c2a; --axis:#383835;
+          --s:#3987e5; --b:#d95926; --c3:#199e70; --neutral:#5a5a56; }
+  }
+  text { font-family: system-ui, -apple-system, "Segoe UI", "PingFang SC", "Microsoft YaHei", "Noto Sans CJK SC", sans-serif; fill: var(--ink); }
+  .t { font-size: 17px; font-weight: 600; }
+  .st { font-size: 13px; fill: var(--ink2); }
+  .lab { font-size: 13px; fill: var(--ink2); }
+  .val { font-size: 12px; fill: var(--ink); font-variant-numeric: tabular-nums; }
+  .ax { font-size: 11px; fill: var(--muted); font-variant-numeric: tabular-nums; }
+  .note { font-size: 11px; fill: var(--muted); }
+</style>
+<rect width="760" height="400" rx="8" fill="var(--surface)"/>
+<text class="t" x="24" y="34">BM01 编码任务交付 / Coding-task delivery</text>
+<text class="st" x="24" y="56">每条件 16 次运行；预注册门槛 12/16，两组都未达到</text>
+<text class="st" x="24" y="74">16 runs per condition; neither reached the preregistered 12/16</text>
+<rect x="24" y="94" width="12" height="12" rx="3" fill="var(--s)"/><text class="lab" x="42" y="104">S · Super-agent 原型 / prototype</text>
+<rect x="254" y="94" width="12" height="12" rx="3" fill="var(--b)"/><text class="lab" x="272" y="104">B · 普通 dsh 单会话 / plain session</text><line x1="24" y1="120" x2="24" y2="354" stroke="var(--grid)" stroke-width="1"/><text class="ax" x="24" y="370" text-anchor="middle">0%</text><line x1="185.5" y1="120" x2="185.5" y2="354" stroke="var(--grid)" stroke-width="1"/><text class="ax" x="185.5" y="370" text-anchor="middle">25%</text><line x1="347" y1="120" x2="347" y2="354" stroke="var(--grid)" stroke-width="1"/><text class="ax" x="347" y="370" text-anchor="middle">50%</text><line x1="508.5" y1="120" x2="508.5" y2="354" stroke="var(--grid)" stroke-width="1"/><text class="ax" x="508.5" y="370" text-anchor="middle">75%</text><line x1="670" y1="120" x2="670" y2="354" stroke="var(--grid)" stroke-width="1"/><text class="ax" x="670" y="370" text-anchor="middle">100%</text><text class="lab" x="24" y="136">冻结规则按时合格 / Frozen on-time pass</text><path d="M24,144 H181.5 Q185.5,144 185.5,148 V162 Q185.5,166 181.5,166 H24 Z" fill="var(--s)"/><text class="val" x="191.5" y="159">4/16</text><path d="M24,168 H423.75 Q427.75,168 427.75,172 V186 Q427.75,190 423.75,190 H24 Z" fill="var(--b)"/><text class="val" x="433.75" y="183">10/16</text><text class="lab" x="24" y="214">功能合格（事后补充）/ Functional pass (post-hoc)</text><path d="M24,222 H464.125 Q468.125,222 468.125,226 V240 Q468.125,244 464.125,244 H24 Z" fill="var(--s)"/><text class="val" x="474.125" y="237">11/16</text><path d="M24,246 H666 Q670,246 670,250 V264 Q670,268 666,268 H24 Z" fill="var(--b)"/><text class="val" x="676" y="261">16/16</text><text class="lab" x="24" y="292">模糊需求先澄清 / Clarified first (ambiguous)</text><text class="val" x="30" y="315">0/4</text><path d="M24,324 H666 Q670,324 670,328 V342 Q670,346 666,346 H24 Z" fill="var(--b)"/><text class="val" x="676" y="339">4/4</text>
+<text class="note" x="24" y="386">“功能合格”为事后补充的探索性指标，不替代冻结结果 / Functional pass is a post-hoc exploratory metric.</text>
+</svg>

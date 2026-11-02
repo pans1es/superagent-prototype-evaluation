@@ -1,0 +1,5 @@
+round,condition,correct_of_11,median_correct_reply_seconds,correct_reply_n,public_messages,public_chars,known_cost_cny,unknown_reserve_cny
+r2,S,10,33.265026,10,21,3780,1.0465552,0.197890
+r2,B,9,76.266819,9,10,1925,1.8152000,0.411918
+r3,S,8,34.762653,8,29,5089,1.0591632,0.191224
+r3,B,9,131.497886,9,10,1370,2.1096888,0.445724

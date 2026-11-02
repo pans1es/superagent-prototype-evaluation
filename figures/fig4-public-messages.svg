@@ -1,0 +1,24 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 760 422" style="max-width:760px;width:100%;height:auto" role="img" aria-label="对外公开消息数 / Public messages posted">
+<style>
+  svg { --surface:#fcfcfb; --ink:#0b0b0b; --ink2:#52514e; --muted:#898781; --grid:#e1e0d9; --axis:#c3c2b7;
+        --s:#2a78d6; --b:#eb6834; --c3:#1baf7a; --neutral:#c3c2b7; --onfill:#ffffff; }
+  @media (prefers-color-scheme: dark) {
+    svg { --surface:#1a1a19; --ink:#f0efec; --ink2:#c3c2b7; --muted:#898781; --grid:#2c2c2a; --axis:#383835;
+          --s:#3987e5; --b:#d95926; --c3:#199e70; --neutral:#5a5a56; }
+  }
+  text { font-family: system-ui, -apple-system, "Segoe UI", "PingFang SC", "Microsoft YaHei", "Noto Sans CJK SC", sans-serif; fill: var(--ink); }
+  .t { font-size: 17px; font-weight: 600; }
+  .st { font-size: 13px; fill: var(--ink2); }
+  .lab { font-size: 13px; fill: var(--ink2); }
+  .val { font-size: 12px; fill: var(--ink); font-variant-numeric: tabular-nums; }
+  .ax { font-size: 11px; fill: var(--muted); font-variant-numeric: tabular-nums; }
+  .note { font-size: 11px; fill: var(--muted); }
+</style>
+<rect width="760" height="422" rx="8" fill="var(--surface)"/>
+<text class="t" x="24" y="34">对外公开消息数 / Public messages posted</text>
+<text class="st" x="24" y="56">Issue、PR 线程里的评论条数</text>
+<text class="st" x="24" y="74">Comments posted in issue and PR threads</text>
+<rect x="24" y="94" width="12" height="12" rx="3" fill="var(--s)"/><text class="lab" x="42" y="104">S · Super-agent 原型 / prototype</text>
+<rect x="254" y="94" width="12" height="12" rx="3" fill="var(--b)"/><text class="lab" x="272" y="104">B · 普通 dsh 单会话 / plain session</text><line x1="24" y1="120" x2="24" y2="376" stroke="var(--grid)"/><text class="ax" x="24" y="392" text-anchor="middle">0</text><line x1="190.5" y1="120" x2="190.5" y2="376" stroke="var(--grid)"/><text class="ax" x="190.5" y="392" text-anchor="middle">10</text><line x1="357" y1="120" x2="357" y2="376" stroke="var(--grid)"/><text class="ax" x="357" y="392" text-anchor="middle">20</text><line x1="523.5" y1="120" x2="523.5" y2="376" stroke="var(--grid)"/><text class="ax" x="523.5" y="392" text-anchor="middle">30</text><line x1="690" y1="120" x2="690" y2="376" stroke="var(--grid)"/><text class="ax" x="690" y="392" text-anchor="middle">40</text><text class="lab" x="24" y="134">BM01（16 次运行合计）/ total of 16 runs</text><path d="M24,140 H686 Q690,140 690,144 V154 Q690,158 686,158 H24 Z" fill="var(--s)"/><text class="val" x="696" y="153">40</text><path d="M24,160 H353 Q357,160 357,164 V174 Q357,178 353,178 H24 Z" fill="var(--b)"/><text class="val" x="363" y="173">20</text><text class="lab" x="24" y="198">BM03（每轮平均）/ per round</text><path d="M24,204 H219.79999999999998 Q223.79999999999998,204 223.79999999999998,208 V218 Q223.79999999999998,222 219.79999999999998,222 H24 Z" fill="var(--s)"/><text class="val" x="229.79999999999998" y="217">12</text><path d="M24,224 H119.89999999999999 Q123.89999999999999,224 123.89999999999999,228 V238 Q123.89999999999999,242 119.89999999999999,242 H24 Z" fill="var(--b)"/><text class="val" x="129.89999999999998" y="237">6</text><text class="lab" x="24" y="262">BM04（每轮平均）/ per round</text><path d="M24,268 H436.25 Q440.25,268 440.25,272 V282 Q440.25,286 436.25,286 H24 Z" fill="var(--s)"/><text class="val" x="446.25" y="281">25</text><path d="M24,288 H186.5 Q190.5,288 190.5,292 V302 Q190.5,306 186.5,306 H24 Z" fill="var(--b)"/><text class="val" x="196.5" y="301">10</text><text class="lab" x="24" y="326">BM07（2 小时）/ 2 hours</text><path d="M24,332 H203.15 Q207.15,332 207.15,336 V346 Q207.15,350 203.15,350 H24 Z" fill="var(--s)"/><text class="val" x="213.15" y="345">11</text><path d="M24,352 H86.60000000000001 Q90.60000000000001,352 90.60000000000001,356 V366 Q90.60000000000001,370 86.60000000000001,370 H24 Z" fill="var(--b)"/><text class="val" x="96.60000000000001" y="365">4</text>
+<text class="note" x="24" y="408">条数不等于阅读时间或打断次数；BM01 中 S 有 9 条重复结果提醒 / Count ≠ reading time; S posted 9 duplicate result notices in BM01.</text>
+</svg>
