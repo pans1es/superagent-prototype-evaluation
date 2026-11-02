@@ -23,7 +23,7 @@
 
 ## Summary
 
-We compared DeepSeek Harness's open-source **Super-agent prototype** (**S**, a two-layer Router + Worker design) against a **plain DeepSeek Harness single session** (**B**, with a subagent tool available), using the same private test repository and the same model (qwen3.7-plus). Round 1 stopped at its budget limit; round 2 covered the remaining benchmarks, with 75 formal runs.
+We compared DeepSeek Harness's open-source **Super-agent prototype** (**S**, a two-layer Router + Worker design) against a **plain DeepSeek Harness single session** (**B**, with a subagent tool available), using the same private test repository and the same model (qwen3.7-plus). Round 1 stopped early because of resource limits; round 2 covered the remaining benchmarks, with 75 formal runs.
 
 Key observations:
 
@@ -62,8 +62,7 @@ Our own summary of the main ideas (please read the original for details):
 | Model | qwen3.7-plus-2026-05-26 (Alibaba Cloud Model Studio, OpenAI-compatible API), 256K context configured; identical for both. Round 1 also ran a tool-calling smoke test with a DeepSeek model, but no capability comparison |
 | Environment | A dedicated, isolated Linux environment (WSL2) with host file sharing disabled and restricted egress. The real model key stayed in an external proxy; agents only held a local proxy credential. A private test repository where agents open PRs but never merge or enable auto-merge |
 | Grading | Each stage was first run end to end against a fake model; generators, collectors and private acceptance scripts were then **frozen** before any paid run. Agents could not see the acceptance scripts. Late artifacts earned no credit. Every post-hoc metric is labeled as such |
-| Budget control | The proxy reserved an upper-bound cost before each request and stopped dispatching at the stop line; requests with missing usage kept their reservation instead of counting as zero |
-| Rounds | Round 1 had a ¥45 budget and stopped at the line; round 2 had a ¥100 budget and used ¥33.18 |
+| Rounds | Round 1 stopped early because of resource limits; round 2 covered the remaining benchmarks, with 75 formal runs |
 | Statistics | Sample standard deviation is reported only for repeated tasks with n=3; smaller n is reported as raw values. **No significance tests were run** |
 
 Benchmarks:
@@ -85,7 +84,7 @@ Benchmarks:
 
 ## 3. Round 1 results
 
-Round 1 stopped at its ¥45 budget line. See `data/round1_runs.csv`. Round 1 priced cached input at the full rate, so **its amounts cannot be compared directly with round 2.**
+Round 1 stopped early because of resource limits; see `data/round1_runs.csv`. Round 1 costs were computed without the cache discount, so **they are only for comparing S and B within the round, not for comparing with round 2 amounts.**
 
 | Test | S | B | Notes |
 |---|---|---|---|
@@ -93,11 +92,9 @@ Round 1 stopped at its ¥45 budget line. See `data/round1_runs.csv`. Round 1 pri
 | BM03 noise stream | 5 new tasks + 1 follow-up, hidden checks 28/28; ¥8.03 | 28/28 as well; ¥4.06 | Both actual publish streams overran the 900 s load design (942.6 / 945.8 s), so no overall pass is reported |
 | BM04 burst | A correct result in 7 of 11 computation slots; ¥4.09 | 6 of 11; ¥10.29 | S was limited by the experiment's byte gate; B did not drain before the deadline and then issued 45 more model calls (¥4.18, no credit) |
 | observe / auto | Native gate 4/4 in each mode; observe executed only explicit requests, auto executed the 3 non-mentioned delegations by design | — | In observe mode, 2 audit records were bound to the wrong scope |
-| BM05 concurrency | 3 PR snapshots, follow-up unfinished | — | Collector failure and the budget stop; no full score |
+| BM05 concurrency | 3 PR snapshots, follow-up unfinished | — | Collector failure, and round 1 stopped early; no full score |
 
 - **Attention proxy**: in BM03, S posted 12 messages with 867 visible characters, B 6 messages with 1,422 characters.
-- **Invalid runs**: 3, all caused by experiment tooling (an observer, a preparation flow, and a contaminated B environment), totaling ¥11.26; the cost is kept on the books.
-- **Tokens**: 21,305,505 input tokens including 19,511,424 cached (about 91.6%), and 228,399 output tokens. Conservative control total: ¥44.89.
 
 ---
 
@@ -120,9 +117,9 @@ Round 1 stopped at its ¥45 budget line. See `data/round1_runs.csv`. Round 1 pri
 
 - Frozen pass over the three repeats: B1 S 0/3, B 2/3; F1 1/3 for both; A1 S 0/3, B 2/3.
 
-![BM01 known cost per run](figures/fig2-bm01-cost-per-run.svg)
+![BM01 cost per run](figures/fig2-bm01-cost-per-run.svg)
 
-- Total known cost: S ¥5.20 (plus a ¥0.20 unknown reserve), B ¥1.85. Median per run: about ¥0.32 for S and ¥0.12 for B. Driver time (including publishing, collection and cleanup) was generally longer for S; per-run data is in `data/bm01_runs.csv`.
+- Total cost: S ¥5.20, B ¥1.85. Median per run: about ¥0.32 for S and ¥0.12 for B. Driver time (including publishing, collection and cleanup) was generally longer for S; per-run data is in `data/bm01_runs.csv`.
 
 ### 4.2 Noise stream (BM03)
 
@@ -138,7 +135,7 @@ Round 1 stopped at its ¥45 budget line. See `data/round1_runs.csv`. Round 1 pri
 
 ![BM04 bursty load](figures/fig3-bm04-burst.svg)
 
-- Correct results (of 11): S 10 and 8; B 9 and 9. Median reply time for correct results: S 33 s and 35 s; B 76 s and 131 s. Known cost: about ¥1.05 per round for S, ¥1.82–2.11 for B.
+- Correct results (of 11): S 10 and 8; B 9 and 9. Median reply time for correct results: S 33 s and 35 s; B 76 s and 131 s. Cost: about ¥1.05 per round for S, ¥1.82–2.11 for B.
 - **Scheduling**: S created 10 tickets per round, with a median of about 8.7 / 9.1 s from event to ticket; the Router made 12 / 11 dispatch calls, each with a batch size of 1. (The article's "merge the backlog into one call" batching did not appear under this load.)
 - **Queueing**: at the deadline, 43 / 22 of B's events were still in the input queue, unread by the model, and were cancelled.
 - **Concurrency**: in one round, three S Worker sessions had steps running at the same time even though maxWorkers was 2: a ticket had ended but its session's last step was still running when the next ticket started. A logical concurrency limit is not the same as actual model concurrency.
@@ -162,7 +159,7 @@ Round 1 stopped at its ¥45 budget line. See `data/round1_runs.csv`. Round 1 pri
 
 ### 4.5 Concurrency (BM05)
 
-| Condition | Ordinary tasks | Known cost |
+| Condition | Ordinary tasks | Cost |
 |---|---|---|
 | S, maxWorkers = 2 | 2/2 | ¥0.83 |
 | B | 2/2 | ¥0.46 |
@@ -190,9 +187,9 @@ Round 1 stopped at its ¥45 budget line. See `data/round1_runs.csv`. Round 1 pri
 
 ### 4.7 Two-hour run (BM07)
 
-| Condition | Frozen pass | Functional pass | Messages | Known cost |
+| Condition | Frozen pass | Functional pass | Messages | Cost |
 |---|---|---|---|---|
-| S | 2/4 (the other 2 failed on `.gitignore` scope) | 4/4 | 11 | ¥1.27 (plus ¥0.21 unknown reserve) |
+| S | 2/4 (the other 2 failed on `.gitignore` scope) | 4/4 | 11 | ¥1.27 |
 | B | 4/4 | 4/4 | 4 | ¥0.90 |
 
 - Both ran the full 7,200 s with 240 resource samples each and no sampler errors.
@@ -213,7 +210,7 @@ Round 1 stopped at its ¥45 budget line. See `data/round1_runs.csv`. Round 1 pri
 
 ### 4.9 Cost attribution (BM10, partial)
 
-| Role | Non-cached input | Cached input | Output | Known cost |
+| Role | Non-cached input | Cached input | Output | Cost |
 |---|---|---|---|---|
 | B single session | 1,500,924 | 18,184,192 | 191,054 | ¥11.80 |
 | S Worker | 1,551,787 | 15,027,712 | 273,713 | ¥11.30 |
@@ -222,7 +219,7 @@ Round 1 stopped at its ¥45 budget line. See `data/round1_runs.csv`. Round 1 pri
 
 - The Router and evaluation share one session, so **their costs cannot be separated**; retries lack per-request source links and cannot be fully attributed either.
 - In the two lost-response cases the proxy billed requests whose usage is missing from the native logs, ¥0.048 in total. Native logs alone undercount.
-- Round 2 totals: ¥29.72 known, ¥3.45 conservative reserve for missing usage; the same usage without the cache discount would be ¥93.98 (a pricing counterfactual only). Prices are published list prices per million tokens: ¥2 non-cached input, ¥0.4 cached input, ¥8 output. **These are not provider invoices.**
+- All costs in this report use published list prices per million tokens (¥2 non-cached input, ¥0.4 cached input, ¥8 output) and are meant only for comparing S and B.
 
 ### 4.10 Observability (BM12) and operations (BM13)
 
@@ -362,7 +359,7 @@ These are engineering suggestions drawn from our observations, not experimental 
 - S and B differ in prompts, tools and integration; this is a **whole-system comparison**, and the differences cannot all be attributed to the two-layer structure.
 - Rounds 1 and 2 used somewhat different protocols (deadline rules, background polling, a git configuration fix), so their samples are not pooled.
 - **Not tested**: real open-source tasks and public baselines; capability comparison with other models; privilege cases needing a non-allow-listed identity (12 in BM03, 3 in BM09); lock-expired crash recovery; whole-host restart; multi-task recovery order; exactly-once external actions; the 30-minute background timeout and three-retry exhaustion; human reading time and interruptions; upgrade and rollback; the article's own scheduling experiments.
-- Costs are proxy estimates, not reconciled with a provider invoice.
+- Costs are list-price estimates meant only for comparing S and B.
 
 ---
 
@@ -370,9 +367,9 @@ These are engineering suggestions drawn from our observations, not experimental 
 
 | File | Contents |
 |---|---|
-| `data/summary.json` | Round-2 setup, per-benchmark results, cost totals and untested items |
-| `data/round1_runs.csv` | Round 1 results, requests, tokens and cost per test, including invalid runs |
-| `data/bm01_runs.csv` | BM01 per run: task, condition, round, frozen and functional pass, PR quality, driver time, known cost |
+| `data/summary.json` | Round-2 setup, per-benchmark results, cost comparisons and untested items |
+| `data/round1_runs.csv` | Round 1 results, requests, tokens and cost comparison per test |
+| `data/bm01_runs.csv` | BM01 per run: task, condition, round, frozen and functional pass, PR quality, driver time, cost |
 | `data/bm04_rounds.csv` | BM04 per round: correct count, median reply time, messages, cost |
 | `data/bm04_detail.csv` | BM04 scheduling, queueing, concurrency overlap and stop-request details |
 | `data/bm06_faults.csv` | BM06 result and notes for each fault and condition |

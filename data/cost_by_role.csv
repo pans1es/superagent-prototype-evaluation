@@ -1,11 +1,11 @@
-scope,role,calls,non_cached_input_tokens,cached_input_tokens,output_tokens,known_cost_cny,notes
+scope,role,calls,non_cached_input_tokens,cached_input_tokens,output_tokens,cost_cny,notes
 round2_all,Baseline (B single session),,1500924,18184192,191054,11.8039568,
 round2_all,Worker (S),,1551787,15027712,273713,11.3043628,
 round2_all,Router shared with Eval (S),,1459326,6949376,108429,6.5658344,Router and Eval share one session and cannot be priced separately
-round2_all,unattributed,,,,,0.0481800,two lost-response cases billed by the proxy but missing from native logs
+round2_all,unattributed,,,,,0.0481800,usage missing from native logs in two lost-response cases (observability gap)
 round2_BM07,Router shared with Eval (S),22,149699,250752,4818,0.4382428,
 round2_BM07,Worker (S),65,126568,1064576,18589,0.8276784,
-round1_BM04,Router shared with Eval (S),51,,,,3.000634,priced at full input rate in round 1; 0.190490 unknown reserve not attributed
-round1_BM04,Worker (S),30,,,,0.895352,priced at full input rate in round 1
-round1_BM03,Router shared with Eval (S),73,,,,4.475698,priced at full input rate in round 1
-round1_BM03,Worker (S),92,,,,3.549930,priced at full input rate in round 1
+round1_BM04,Router shared with Eval (S),51,,,,3.000634,round 1 prices exclude the cache discount; compare within the round only
+round1_BM04,Worker (S),30,,,,0.895352,round 1 prices exclude the cache discount; compare within the round only
+round1_BM03,Router shared with Eval (S),73,,,,4.475698,round 1 prices exclude the cache discount; compare within the round only
+round1_BM03,Worker (S),92,,,,3.549930,round 1 prices exclude the cache discount; compare within the round only

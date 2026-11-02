@@ -22,7 +22,7 @@
 | 编码任务冻结合格 / Coding, frozen pass | 4/16 | 10/16 |
 | 编码任务功能合格（事后补充）/ Coding, functional pass (post-hoc) | 11/16 | 16/16 |
 | 模糊需求先澄清 / Clarified first | 0/4 | 4/4 |
-| 编码任务已知费用 / Coding, known cost | ¥5.20 | ¥1.85 |
+| 编码任务费用 / Coding, cost | ¥5.20 | ¥1.85 |
 | 编码任务对外消息 / Coding, public messages | 40 | 20 |
 | 突发负载正确数（2 轮）/ Burst, correct (2 rounds) | 10, 8 of 11 | 9, 9 of 11 |
 | 突发负载正确回复中位时间 / Burst, median correct reply | 33 s, 35 s | 76 s, 131 s |
@@ -53,7 +53,7 @@ See sections 5 and 6 of the report for all 16 problems (with evidence and sample
 - **对照 / Baseline**: 同版本 DeepSeek Harness 单会话，可调用子 Agent / same-version single session with a subagent tool
 - **模型 / Model**: qwen3.7-plus-2026-05-26
 - **测试项 / Benchmarks**: 编码任务、噪音流、突发负载、原生模式对照、并发、故障恢复、两小时运行、提示词注入，以及注意力、成本、可观测性和运维分析 / coding, noise, burst, native mode comparison, concurrency, fault recovery, 2-hour run, prompt injection, plus attention, cost, observability and operations analysis
-- **规模 / Scale**: 两轮；第一轮按 45 元预算中止，第二轮 75 次正式运行 / two rounds; round 1 stopped at a ¥45 budget, round 2 had 75 formal runs
+- **规模 / Scale**: 两轮；第一轮因资源限制提前中止，第二轮 75 次正式运行 / two rounds; round 1 stopped early because of resource limits, round 2 had 75 formal runs
 - **数据 / Data**: 10 个脱敏数据文件，覆盖两轮全部测试项 / 10 sanitized data files covering every benchmark in both rounds
 
 ## 主要局限 / Main limitations
@@ -61,7 +61,7 @@ See sections 5 and 6 of the report for all 16 problems (with evidence and sample
 - 单一模型，自建小任务集，不是公开基准 / One model; small self-built tasks, not a public benchmark
 - 小样本，未做显著性检验 / Small samples, no significance tests
 - 整体系统对比，不能把差异全部归因于两层结构 / Whole-system comparison; differences are not all attributable to the two-layer design
-- 费用为按公开价格的代理估算，不是账单 / Costs are list-price proxy estimates, not invoices
+- 费用按公开价格估算，仅用于 S 与 B 的比较 / Costs are list-price estimates for comparing S and B only
 
 ## 说明 / Notes
 

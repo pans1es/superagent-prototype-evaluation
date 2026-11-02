@@ -1,75 +1,187 @@
 {
-  "_note": "Sanitized summary of the second evaluation round. S = dsh-superagent-prototype (Router/Worker); B = plain DeepSeek Harness single session with subagent available. Single model, small self-built task set, small samples. Costs are proxy estimates at published list prices, not provider invoices.",
+  "_note": "Sanitized summary of the second evaluation round. S = dsh-superagent-prototype (Router/Worker); B = plain DeepSeek Harness single session with subagent available. Single model, small self-built task set, small samples. Costs are list-price estimates intended only for comparing S and B.",
   "setup": {
     "prototype": "deepseek-ai/dsh-superagent-prototype@6337fc823ce20251c8de8085948165c81aaa701e",
     "harness": "deepseek-harness 0.2.1-rc.3 @ 1f81c047fc48fa190a683e469daa699857e9afe8",
     "model": "qwen3.7-plus-2026-05-26 (Alibaba Cloud Model Studio, OpenAI-compatible API)",
     "context_window_configured": 256000,
-    "pricing_cny_per_million_tokens": { "input_non_cached": 2.0, "input_cached": 0.4, "output": 8.0 },
+    "pricing_cny_per_million_tokens": {
+      "input_non_cached": 2.0,
+      "input_cached": 0.4,
+      "output": 8.0
+    },
     "formal_runs": 75,
-    "paid_smoke_runs": 2,
     "native_sessions_decoded": 148,
     "baseline_sessions_offering_subagent": 37,
     "baseline_subagent_calls": 0
   },
   "bm01_coding": {
     "runs_per_condition": 16,
-    "frozen_on_time_pass": { "S": "4/16", "B": "10/16" },
-    "functional_pass_all_runs_post_hoc": { "S": "11/16", "B": "16/16" },
-    "functional_tests_pass_of_tested_post_hoc": { "S": "11/15 (1 run produced no PR)", "B": "16/16" },
-    "clarify_before_implementing_ambiguous": { "S": "0/4", "B": "4/4" },
+    "frozen_on_time_pass": {
+      "S": "4/16",
+      "B": "10/16"
+    },
+    "functional_pass_all_runs_post_hoc": {
+      "S": "11/16",
+      "B": "16/16"
+    },
+    "functional_tests_pass_of_tested_post_hoc": {
+      "S": "11/15 (1 run produced no PR)",
+      "B": "16/16"
+    },
+    "clarify_before_implementing_ambiguous": {
+      "S": "0/4",
+      "B": "4/4"
+    },
     "preregistered_threshold": "12/16 (neither condition reached it)",
     "main_failure_cause": "extra .gitignore change outside the frozen scope allow-list (both conditions)",
     "repeat_pr_quality_mean_sd_0_4": {
-      "B1": { "S": [3.0, 0.0], "B": [3.667, 0.577] },
-      "F1": { "S": [3.5, "n=2, not reported"], "B": [3.333, 0.577] },
-      "A1": { "S": [1.0, 0.0], "B": [3.667, 0.577] }
+      "B1": {
+        "S": [
+          3.0,
+          0.0
+        ],
+        "B": [
+          3.667,
+          0.577
+        ]
+      },
+      "F1": {
+        "S": [
+          3.5,
+          "n=2, not reported"
+        ],
+        "B": [
+          3.333,
+          0.577
+        ]
+      },
+      "A1": {
+        "S": [
+          1.0,
+          0.0
+        ],
+        "B": [
+          3.667,
+          0.577
+        ]
+      }
     },
-    "known_cost_cny": { "S": 5.195782, "B": 1.852544 },
-    "public_messages": { "S": 40, "B": 20 },
-    "visible_chars": { "S": 7999, "B": 7537 },
-    "duplicate_result_notices_S": 9
+    "public_messages": {
+      "S": 40,
+      "B": 20
+    },
+    "visible_chars": {
+      "S": 7999,
+      "B": 7537
+    },
+    "duplicate_result_notices_S": 9,
+    "cost_cny": {
+      "S": 5.195782,
+      "B": 1.852544
+    }
   },
   "bm03_noise_stream": {
     "rounds_per_condition": 2,
     "per_round": [
-      { "round": "r2", "S": { "result": "6/6", "messages": 12, "chars": 1678, "median_correct_reply_s": 132.27, "known_cost_cny": 1.515018 },
-                       "B": { "result": "6/6", "messages": 6, "chars": 2047, "median_correct_reply_s": 67.52, "known_cost_cny": 1.4815388 } },
-      { "round": "r3", "S": { "result": "collector defect; post-hoc 6/6 (not the frozen result)", "messages": 12, "chars": 1902, "median_correct_reply_s": 116.49, "known_cost_cny": 1.3845712 },
-                       "B": { "result": "6/6", "messages": 6, "chars": 3002, "median_correct_reply_s": 72.09, "known_cost_cny": 1.6391828 } }
+      {
+        "round": "r2",
+        "S": {
+          "result": "6/6",
+          "messages": 12,
+          "chars": 1678,
+          "median_correct_reply_s": 132.27,
+          "cost_cny": 1.515018
+        },
+        "B": {
+          "result": "6/6",
+          "messages": 6,
+          "chars": 2047,
+          "median_correct_reply_s": 67.52,
+          "cost_cny": 1.4815388
+        }
+      },
+      {
+        "round": "r3",
+        "S": {
+          "result": "collector defect; post-hoc 6/6 (not the frozen result)",
+          "messages": 12,
+          "chars": 1902,
+          "median_correct_reply_s": 116.49,
+          "cost_cny": 1.3845712
+        },
+        "B": {
+          "result": "6/6",
+          "messages": 6,
+          "chars": 3002,
+          "median_correct_reply_s": 72.09,
+          "cost_cny": 1.6391828
+        }
+      }
     ],
     "note": "S deduplicated 6 same-ID replays at ingress; 36 independent noise-thread messages per S round did not reach the Router. 12 slots requiring a non-allow-listed identity were not executed."
   },
   "bm04_burst": "see bm04_rounds.csv",
   "bm05_concurrency": {
-    "S_maxWorkers_2": { "ordinary_tasks": "2/2", "known_cost_cny": 0.8275716 },
-    "B": { "ordinary_tasks": "2/2", "known_cost_cny": 0.4605536 },
-    "S_maxWorkers_1": { "ordinary_tasks": "1/2", "known_cost_cny": 0.9050012 },
+    "S_maxWorkers_2": {
+      "ordinary_tasks": "2/2",
+      "cost_cny": 0.8275716
+    },
+    "B": {
+      "ordinary_tasks": "2/2",
+      "cost_cny": 0.4605536
+    },
+    "S_maxWorkers_1": {
+      "ordinary_tasks": "1/2",
+      "cost_cny": 0.9050012
+    },
     "active_cancellation": "not tested (trigger condition not met in any condition)",
     "n": 1
   },
   "bm06_faults": {
-    "normal_restart": { "S": "auto-resumed and delivered (hostRestarted + new Assignment + relayed recovery note)", "B": "history restored, task not continued" },
-    "sigkill_then_start_after_10s": { "S": "start failed: state lock (30 s stale window) still held; lock-expired recovery not tested", "B": "failed" },
-    "http_429": { "S": "delivered", "B": "delivered" },
-    "http_500": { "S": "delivered", "B": "delivered" },
-    "socket_stall": { "S": "delivered, beyond 300 s recovery threshold", "B": "delivered, beyond 300 s recovery threshold" },
-    "response_lost": { "S": "invalid (history-event contamination; root cause unresolved)", "B": "delivered" },
+    "normal_restart": {
+      "S": "auto-resumed and delivered (hostRestarted + new Assignment + relayed recovery note)",
+      "B": "history restored, task not continued"
+    },
+    "sigkill_then_start_after_10s": {
+      "S": "start failed: state lock (30 s stale window) still held; lock-expired recovery not tested",
+      "B": "failed"
+    },
+    "http_429": {
+      "S": "delivered",
+      "B": "delivered"
+    },
+    "http_500": {
+      "S": "delivered",
+      "B": "delivered"
+    },
+    "socket_stall": {
+      "S": "delivered, beyond 300 s recovery threshold",
+      "B": "delivered, beyond 300 s recovery threshold"
+    },
+    "response_lost": {
+      "S": "invalid (history-event contamination; root cause unresolved)",
+      "B": "delivered"
+    },
     "correction": "An earlier reading that normal restart needed a manual follow-up message was wrong: the recovery note appears with role=user but source.kind=dsh-superagent, form=relay."
   },
   "bm07_two_hours": {
-    "S": { "frozen": "2/4", "functional": "4/4", "frozen_failures": ".gitignore scope (2)", "messages": 11, "known_cost_cny": 1.2659212, "unknown_reserve_cny": 0.208116 },
-    "B": { "frozen": "4/4", "functional": "4/4", "messages": 4, "known_cost_cny": 0.9044556 },
+    "S": {
+      "frozen": "2/4",
+      "functional": "4/4",
+      "frozen_failures": ".gitignore scope (2)",
+      "messages": 11,
+      "cost_cny": 1.2659212
+    },
+    "B": {
+      "frozen": "4/4",
+      "functional": "4/4",
+      "messages": 4,
+      "cost_cny": 0.9044556
+    },
     "samples_per_condition": 240
   },
   "bm09_prompt_injection": "see bm09_cases.csv",
-  "totals": {
-    "known_cost_cny": 29.72449,
-    "unknown_usage_reserve_cny": 3.45172,
-    "paid_smoke_cny_included_in_total": 0.002156,
-    "known_tokens": { "input_non_cached": 4533405, "input_cached": 40161280, "output": 574146 },
-    "same_usage_full_price_counterfactual_cny": 93.982538
-  },
   "not_done": [
     "BM02 real open-source tasks / SWE-bench-style public baselines",
     "BM11 other models",
