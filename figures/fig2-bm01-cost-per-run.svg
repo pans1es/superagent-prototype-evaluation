@@ -1,4 +1,4 @@
-<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 760 278" style="max-width:760px;width:100%;height:auto" role="img" aria-label="BM01 每次运行的已知费用 / Known cost per coding run (CNY)">
+<svg xmlns="http://www.w3.org/2000/svg" width="760" height="278" viewBox="0 0 760 278" role="img" aria-label="BM01 每次运行的已知费用 / Known cost per coding run (CNY)">
 <style>
   svg { --surface:#fcfcfb; --ink:#0b0b0b; --ink2:#52514e; --muted:#898781; --grid:#e1e0d9; --axis:#c3c2b7;
         --s:#2a78d6; --b:#eb6834; --c3:#1baf7a; --neutral:#c3c2b7; --onfill:#ffffff; }
