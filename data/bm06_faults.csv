@@ -1,0 +1,13 @@
+fault,condition,code_delivered,valid,notes
+normal_restart,S,true,true,"official restart; old Assignment ended with hostRestarted, new Assignment created, relayed recovery note delivered; Worker checked git and remote PRs before continuing"
+normal_restart,B,false,true,"session history restored via session/resume; task not continued within the window"
+sigkill_then_start_10s,S,false,true,"start failed with 'Lock file is already being held'; stale lock window 30 s; no automatic re-acquire; lock-expired recovery not tested"
+sigkill_then_start_10s,B,false,true,
+http_429,S,true,true,"one injected failure on the first request; native transport retry"
+http_429,B,true,true,
+http_500,S,true,true,"one injected failure on the first request"
+http_500,B,true,true,
+socket_stall,S,true,true,"delivered eventually but beyond the 300 s recovery threshold"
+socket_stall,B,true,true,"delivered eventually but beyond the 300 s recovery threshold"
+response_lost,S,true,false,"invalid: 10 historical comments outside the controlled generator entered as new work and an extra PR was opened for an old task; background polling and the controlled generator were both enabled; root cause unresolved"
+response_lost,B,true,true,

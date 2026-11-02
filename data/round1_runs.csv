@@ -1,0 +1,14 @@
+benchmark,condition,validity,result,model_requests,input_tokens_incl_cache,cached_input_tokens,output_tokens,control_cost_cny,missing_usage_requests,notes
+BM00,S,valid,private acceptance 20/20,,,,,0.745590,0,one coding task; 176 s comment-to-PR including a 77.573 s operator pause
+BM00,B,valid,private acceptance 20/20,,,,,0.336460,0,one coding task; 114 s comment-to-PR
+BM00,both,valid,,67,718392,617728,23242,1.622720,0,smoke and calibration total
+BM03,S,valid,5 new tasks + 1 follow-up; hidden checks 28/28,165,3879890,3490176,33231,8.025628,0,actual publish stream 942.556 s (900 s load condition not met)
+BM03,B,valid,5 new tasks + 1 follow-up; hidden checks 28/28,101,1975610,1841536,13548,4.059604,0,clean restart after contamination; stream 945.769 s (900 s condition not met)
+BM04,S,valid,correct result present in 7/11 slots,82,1827649,1595648,30086,4.086476,1,limited by the experiment's byte gate; Router rewrote two correct Worker results (see findings)
+BM04,B,valid,correct result present in 6/11 slots,174,4995031,4719872,37223,10.287846,0,not drained by deadline; 45 model calls after the window cost 4.176110 and earned no credit; 7 replies to requests that had not been posted yet
+mode_observe,S,valid,native gate 4/4; 1 PR,18,284904,236800,6694,0.623360,0,observe executes only explicit requests; 2 audit records bound to the wrong scope
+mode_auto,S,valid,native gate 4/4; 4 PRs,61,967494,867456,14180,2.048428,0,auto executed the 3 non-mentioned delegations by design
+BM05,S,partial,3 PR snapshots; follow-up incomplete,74,1236977,1148928,17178,2.872878,1,collector crashed and the budget stop was reached; no full score
+invalid_S_observer,S,invalid,,30,549293,499200,6877,1.153602,0,experiment-tooling problem; cost kept
+invalid_S_prepare,S,invalid,,169,3579654,3281664,37724,7.461100,0,experiment-tooling problem; cost kept
+invalid_B_contaminated,B,invalid,,72,1290611,1212416,8416,2.648550,0,experiment-tooling problem; cost kept
