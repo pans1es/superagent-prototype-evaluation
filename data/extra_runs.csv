@@ -1,10 +1,10 @@
-benchmark,condition,result,model_requests,input_tokens_incl_cache,cached_input_tokens,output_tokens,cost_cny,notes
+benchmark,condition,result,model_requests,input_tokens_incl_cache,cached_input_tokens,output_tokens,cost_cny_full_price,notes
 BM00,S,private acceptance 20/20,,,,,0.745590,one coding task; 176 s comment-to-PR including a 77.573 s operator pause
 BM00,B,private acceptance 20/20,,,,,0.336460,one coding task; 114 s comment-to-PR
 BM03,S,5 new tasks + 1 follow-up; hidden checks 28/28,165,3879890,3490176,33231,8.025628,actual publish stream 942.556 s (900 s load condition not met)
 BM03,B,5 new tasks + 1 follow-up; hidden checks 28/28,101,1975610,1841536,13548,4.059604,clean restart after contamination; stream 945.769 s (900 s condition not met)
-BM04,S,correct result present in 7/11 slots,82,1827649,1595648,30086,4.086476,limited by the experiment's byte gate; Router rewrote two correct Worker results (see findings)
+BM04,S,correct result present in 7/11 slots,82,1827649,1595648,30086,4.086476,run under an experiment-side byte gate; Router rewrote two correct Worker results (see findings)
 BM04,B,correct result present in 6/11 slots,174,4995031,4719872,37223,10.287846,not drained by deadline; 45 model calls after the window cost 4.176110 and earned no credit; 7 replies to requests that had not been posted yet
 mode_observe,S,native gate 4/4; 1 PR,18,284904,236800,6694,0.623360,observe executes only explicit requests; 2 audit records bound to the wrong scope
 mode_auto,S,native gate 4/4; 4 PRs,61,967494,867456,14180,2.048428,auto executed the 3 non-mentioned delegations by design
-BM05,S,3 PR snapshots; follow-up incomplete,74,1236977,1148928,17178,2.872878,collector crashed and round 1 stopped early; no full score
+BM05,S,3 PR snapshots; follow-up incomplete,74,1236977,1148928,17178,2.872878,collector crashed and the run was stopped early; no full score

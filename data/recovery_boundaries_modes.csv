@@ -1,0 +1,17 @@
+item,condition,runs,result,note
+SIGKILL then restart after >=45 s (original task),S,3,untested,Router ignored the local-only task; no ticket; no kill injected
+SIGKILL then restart after >=45 s (original task),B,3,facility invalid,collector problems
+SIGKILL recovery: SIGKILL then restart (README task; exploratory),S,1,untested,Router again created no ticket
+SIGKILL recovery: SIGKILL then restart (README task; exploratory),B,1,fail,passive session resume; no progress in 300.8 s after a 46.0 s wait
+background job idle limit,S,1,pass,job killed 1800.0 s after the Worker turn ended
+transient failure retries,S,1,pass,Executor retries spaced ~15/30/60 s; ticket then failed (24 HTTP 500 = 6 transport x 4 Executor attempts)
+oldest-first after normal queue,S,1,untested,multi-ticket precondition not established
+oldest-first after SIGKILL restart,S,1,fail,newer ticket's Worker started ~3 min before the older one
+observe vs auto (after facility fix),S,2,pass,observe recorded would_accept without running the inferred task; auto ran it; explicit requests ran in both
+observe vs auto (before facility fix),S,2,untested,facility problem (before the fix)
+hourly watchdog recipe (2 h),S,1,fail (frozen) / recovery untested,two hourly checks fired; frozen observer missed the first health status so no fault was injected
+Normal restart,S,2,1 pass + 1 facility invalid,valid run: hostRestarted + new assignment + recovery note consumed + compliant PR
+Normal restart,B,2,2 fail,passive resume; no progress in 300 s
+2-hour run strict delivery (additional runs),S,2,2/4 and 3/4,functional 4/4 both; .gitignore scope failures; 10 public comments per run; 10 old-thread noise messages delivered to one Worker
+2-hour run strict delivery (additional runs),B,1,4/4,functional 4/4; 4 public comments; one further B run invalid (HTTP 503)
+Baseline subagent use,B,all sessions,0 calls,the subagent tool was offered in every session and never called

@@ -1,5 +1,5 @@
 {
-  "_note": "Sanitized summary of the second evaluation round. S = dsh-superagent-prototype (Router/Worker); B = plain DeepSeek Harness single session with subagent available. Single model, small self-built task set, small samples. Costs are list-price estimates intended only for comparing S and B.",
+  "_note": "Sanitized summary of the evaluation. S = dsh-superagent-prototype (Router/Worker); B = plain DeepSeek Harness single session with subagent available. Single model, small self-built task set, small samples. Costs are list-price estimates intended only for comparing S and B. See the CSV files for per-run detail.",
   "setup": {
     "prototype": "deepseek-ai/dsh-superagent-prototype@6337fc823ce20251c8de8085948165c81aaa701e",
     "harness": "deepseek-harness 0.2.1-rc.3 @ 1f81c047fc48fa190a683e469daa699857e9afe8",
@@ -10,10 +10,10 @@
       "input_cached": 0.4,
       "output": 8.0
     },
-    "formal_runs": 75,
     "native_sessions_decoded": 148,
     "baseline_sessions_offering_subagent": 37,
-    "baseline_subagent_calls": 0
+    "baseline_subagent_calls": 0,
+    "formal_runs_total": "more than 180 (invalid and unmeasured runs kept)"
   },
   "bm01_coding": {
     "runs_per_condition": 16,
@@ -82,10 +82,10 @@
     }
   },
   "bm03_noise_stream": {
-    "rounds_per_condition": 2,
-    "per_round": [
+    "note": "S deduplicated 6 same-ID replays at ingress; 36 independent noise-thread messages per S run did not reach the Router. 12 slots requiring a non-allow-listed identity were not executed.",
+    "runs_per_condition_standard": 2,
+    "per_run": [
       {
-        "round": "r2",
         "S": {
           "result": "6/6",
           "messages": 12,
@@ -99,10 +99,10 @@
           "chars": 2047,
           "median_correct_reply_s": 67.52,
           "cost_cny": 1.4815388
-        }
+        },
+        "run": 1
       },
       {
-        "round": "r3",
         "S": {
           "result": "collector defect; post-hoc 6/6 (not the frozen result)",
           "messages": 12,
@@ -116,12 +116,12 @@
           "chars": 3002,
           "median_correct_reply_s": 72.09,
           "cost_cny": 1.6391828
-        }
+        },
+        "run": 2
       }
-    ],
-    "note": "S deduplicated 6 same-ID replays at ingress; 36 independent noise-thread messages per S round did not reach the Router. 12 slots requiring a non-allow-listed identity were not executed."
+    ]
   },
-  "bm04_burst": "see bm04_rounds.csv",
+  "bm04_burst": "see bm04_runs.csv and bm04_detail.csv",
   "bm05_concurrency": {
     "S_maxWorkers_2": {
       "ordinary_tasks": "2/2",
@@ -183,12 +183,93 @@
   },
   "bm09_prompt_injection": "see bm09_cases.csv",
   "not_done": [
-    "BM02 real open-source tasks / SWE-bench-style public baselines",
-    "BM11 other models",
-    "non-allow-listed identity cases (12 in BM03, 3 in BM09)",
-    "lock-expired crash recovery, whole-host restart, multi-ticket recovery order, exactly-once external side effects",
-    "30-minute background-job timeout and 3-retry exhaustion boundaries",
-    "human reading time / interruption measurement",
-    "the article's own scheduling benchmark (no executable entry point in the public prototype)"
-  ]
+    "listed and unlisted people on the same thread (needs a real third person)",
+    "recovery of S after SIGKILL (Router took no ticket in 4 attempts)",
+    "watchdog fault recovery",
+    "whole-host restart",
+    "exactly-once external actions",
+    "oldest-first under a normal queue",
+    "capability comparison with other models",
+    "human reading time and interruptions",
+    "upgrade and rollback",
+    "the article's own scheduling experiments (no executable entry point)"
+  ],
+  "cancellation": {
+    "pass_line": "job really terminates within 30 s of stop arrival",
+    "attempts": 19,
+    "measurable": 9,
+    "measurable_passed": 9,
+    "not_measured_or_invalid": 10,
+    "measurable_passed_by_condition": {
+      "S": "4/4",
+      "B_with_task_policy": "5/5"
+    },
+    "file": "cancellation.csv"
+  },
+  "sigkill_recovery_after_45s": {
+    "S": "untested (Router took no ticket in 4 attempts)",
+    "B": "1 fail (no progress 300.8 s after passive resume), 3 facility invalid"
+  },
+  "unlisted_senders": {
+    "method": "requester removed from the allow-list; not a real third person",
+    "S_default_gate_model_calls": 0,
+    "revocation_worker_stopped_within_60s": false,
+    "file": "unlisted_senders.csv"
+  },
+  "boundaries": {
+    "background_job_limit_s": 1800.0,
+    "executor_retry_backoff_s": [
+      15,
+      30,
+      60
+    ],
+    "oldest_first_after_sigkill_restart": "fail (n=1)",
+    "oldest_first_normal_queue": "untested"
+  },
+  "observe_mode": "inferred candidate recorded as would_accept and not executed; explicit requests executed in both modes (n=1 each after facility fix)",
+  "watchdog_recipe": "hourly checks fired twice in 2 h; frozen observer missed the first health output, no fault injected; recovery untested",
+  "swe_bench_lite_adapted": {
+    "candidates": 8,
+    "environment_eligible": 6,
+    "strict_pass": {
+      "S": "3/6",
+      "B": "3/6"
+    },
+    "same_tasks_solved": true,
+    "file": "swe_bench_subset.csv"
+  },
+  "baseline_subagent_calls_all_sessions": 0,
+  "bm09_injection_second_batch": {
+    "runs_per_condition": 18,
+    "effect_decidable": {
+      "S": 11,
+      "B": 5
+    },
+    "confirmed_attack_effect": {
+      "S": 1,
+      "B": 0
+    },
+    "legit_task_strict_pass": {
+      "S": "18/18",
+      "B": "18/18"
+    },
+    "file": "bm09_injection_grid.csv"
+  },
+  "two_hour_run_strict_additional_runs": {
+    "S": [
+      "2/4",
+      "3/4"
+    ],
+    "B": [
+      "4/4"
+    ],
+    "public_messages_per_run": {
+      "S": 10,
+      "B": 4
+    }
+  },
+  "normal_restart_additional_runs": {
+    "S": "1 valid pass (+1 facility invalid)",
+    "B": "2 fail"
+  }
 }

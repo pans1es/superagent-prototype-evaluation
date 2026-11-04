@@ -1,0 +1,10 @@
+benchmark,run,condition,result,public_messages,public_chars,median_correct_reply_seconds,cost_cny,notes
+BM03,run1,S,6/6,12,1678,132.27,1.5150180,48 unique events stored; 6 same-ID replays rejected as duplicates; 36 noise-thread messages did not reach the Router
+BM03,run1,B,6/6,6,2047,67.52,1.4815388,all 54 events entered the single session
+BM03,run2,S,collector defect (post-hoc 6/6 with the same frozen checker),12,1902,116.49,1.3845712,collector regex missed short PR references; PRs were delivered
+BM03,run2,B,6/6,6,3002,72.09,1.6391828,
+BM05,S2,S (maxWorkers=2),ordinary tasks 2/2,,,,0.8275716,active cancellation not tested (trigger not met)
+BM05,B2,B,ordinary tasks 2/2,,,,0.4605536,active cancellation not tested (trigger not met)
+BM05,S1,S (maxWorkers=1),ordinary tasks 1/2,,,,0.9050012,single-variable ablation; n=1
+BM07,run1,S,frozen 2/4; functional 4/4,11,2143,,1.2659212,7200 s; 240 resource samples; 0 sampler errors; 3 tasks had two comments linking the same PR; frozen failures were .gitignore scope
+BM07,run1,B,frozen 4/4; functional 4/4,4,,,0.9044556,7200 s; 240 resource samples

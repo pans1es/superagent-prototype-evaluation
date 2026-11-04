@@ -1,0 +1,9 @@
+instance_id,environment_eligible,S_strict_pass,S_f2p,S_p2p,B_strict_pass,B_f2p,B_p2p
+pallets__flask-4045,yes,no,1/2,50/50,no,1/2,50/50
+pallets__flask-4992,yes,no,0/1,18/18,no,0/1,18/18
+pytest-dev__pytest-11143,yes,yes,1/1,114/114,yes,1/1,114/114
+pytest-dev__pytest-11148,yes,yes,2/2,129/129,yes,2/2,129/129
+pylint-dev__pylint-5859,yes,yes,1/1,10/10,yes,1/1,10/10
+pylint-dev__pylint-6506,yes,no,0/2,6/6,no,0/2,6/6
+psf__requests-1963,no (environment control failed),untested,,,untested,,
+psf__requests-2148,no (environment control failed),untested,,,untested,,

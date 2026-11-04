@@ -1,0 +1,20 @@
+case,load,condition,outcome,consumer_role,host_to_consumption_s,consumption_to_termination_s,total_s
+BM04-sub-B-policy-run1,BM04 cancellation sub-load,B-policy,pass,B session,1.206,5.420,6.626
+BM04-sub-B-policy-run2,BM04 cancellation sub-load,B-policy,pass,B session,0.857,3.849,4.706
+BM04-sub-B-policy-run3,BM04 cancellation sub-load,B-policy,facility invalid,B session,,,
+BM04-sub-B-nopolicy-run1,BM04 cancellation sub-load,B without trust policy,facility invalid,,,,
+BM04-sub-S-run1,BM04 cancellation sub-load,S,untested (precondition not met),,,,
+BM04-sub-S-run2,BM04 cancellation sub-load,S,pass,Worker,0.050,6.634,6.684
+BM04-sub-S-run3,BM04 cancellation sub-load,S,pass,Worker,1.023,4.947,5.970
+BM05-sub-B-policy-run1,BM05 cancellation sub-load,B-policy,pass,B session,8.817,6.262,15.079
+BM05-sub-B-policy-run2,BM05 cancellation sub-load,B-policy,pass,B session,7.014,4.581,11.595
+BM05-sub-B-policy-run3,BM05 cancellation sub-load,B-policy,pass,B session,6.316,9.629,15.945
+BM05-sub-S-run1,BM05 cancellation sub-load,S,untested (precondition not met),,,,
+BM05-sub-S-run2,BM05 cancellation sub-load,S,untested (precondition not met),,,,
+BM05-sub-S-run3,BM05 cancellation sub-load,S,pass,Worker,5.878,6.551,12.429
+BM05-full-B-run2,BM05 full concurrent load,B,facility invalid,,,,
+BM05-full-B-run3,BM05 full concurrent load,B,untested (precondition not met),,,,
+BM05-full-S1-run2,BM05 full concurrent load,S maxWorkers=1,untested (precondition not met),,,,
+BM05-full-S1-run3,BM05 full concurrent load,S maxWorkers=1,pass,Router,0.031,5.291,5.322
+BM05-full-S2-run2,BM05 full concurrent load,S maxWorkers=2,untested (precondition not met),,,,
+BM05-full-S2-run3,BM05 full concurrent load,S maxWorkers=2,untested (precondition not met),,,,

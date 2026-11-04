@@ -1,4 +1,4 @@
-task,condition,round,frozen_pass,functional_pass,pr_quality_0_4,driver_seconds,cost_cny
+task,condition,repeat,frozen_pass,functional_pass,pr_quality_0_4,driver_seconds,cost_cny
 B1,S,1,false,true,3,222.28,0.3305484
 B1,B,1,false,true,3,129.19,0.1106140
 B2,S,1,false,true,3,218.29,0.3367516
