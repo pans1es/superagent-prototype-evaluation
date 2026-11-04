@@ -11,17 +11,22 @@
 
 ## 一句话结论 / Bottom line
 
-**中文**：DeepSeek 开源的 Super-agent 原型（Router + Worker 两层结构）里，持久任务、事件入口去重和代码层准入（Gate）值得借鉴。但在本次测试里（qwen3.7-plus，180 多次正式运行），没有证据表明默认采用两层架构能比普通单会话交付更好、更省钱或更省心；凡是只靠提示词约束的地方——改动范围、撤权、线程里的陌生人、注入——都观察到了偏差。
+**中文**：整个实验前后约 4 天，累计运行约 77 小时，其中约 20 小时是两小时运行这类测试必须的真实等待。DeepSeek 开源的 Super-agent 原型（Router + Worker 两层结构）里，持久任务、事件入口去重和代码层准入（Gate）值得借鉴。但在本次测试里（qwen3.7-plus，180 多次正式运行），没有证据表明默认采用两层架构能比普通单会话交付更好、更省钱或更省心；凡是只靠提示词约束的地方——改动范围、撤权、线程里的陌生人、注入——都观察到了偏差。
 
-**English**: The durable tasks, ingress deduplication and code-level admission gate in DeepSeek's open-source Super-agent prototype (a two-layer Router + Worker design) are worth borrowing. In this test (qwen3.7-plus, more than 180 formal runs), however, there is no evidence that defaulting to the two-layer architecture delivers better, cheaper or less attention-demanding results than a plain single session — and wherever the design relies on prompts alone (change scope, revocation, strangers on a thread, injection), we saw deviations.
+**English**: The evaluation took about 4 days and roughly 77 hours of running time, about 20 of them real waiting that tests such as the two-hour runs require. The durable tasks, ingress deduplication and code-level admission gate in DeepSeek's open-source Super-agent prototype (a two-layer Router + Worker design) are worth borrowing. In this test (qwen3.7-plus, more than 180 formal runs), however, there is no evidence that defaulting to the two-layer architecture delivers better, cheaper or less attention-demanding results than a plain single session — and wherever the design relies on prompts alone (change scope, revocation, strangers on a thread, injection), we saw deviations.
 
 ![BM01 coding-task delivery](figures/fig1-bm01-delivery.svg)
+
+> ⏱ **实验耗时 / Time spent**：前后约 4 天，累计运行约 77 小时；两小时运行、Watchdog 这类测试连同模拟约占 20 小时。
+> About 4 days and ~77 hours of running time; long tests such as the two-hour runs and the watchdog took about 20 hours including rehearsals.
 
 | 指标 / Metric | S · Super-agent | B · 单会话 / single session |
 |---|---|---|
 | 编码任务冻结合格 / Coding, frozen pass | 4/16 | 10/16 |
 | 编码任务功能合格（事后补充）/ Coding, functional pass (post-hoc) | 11/16 | 16/16 |
 | 模糊需求先澄清 / Clarified first | 0/4 | 4/4 |
+| 编码任务用时中位数 / Coding, median time per run | 218 s | 134 s |
+| SWE-bench 首个 PR 用时中位数 / SWE-bench, median time to first PR | 277 s | 187 s |
 | 两小时运行严格交付 / 2-hour run, strict delivery | 2/4, 2/4, 3/4 | 4/4, 4/4 |
 | SWE-bench 改造子集 / Adapted SWE-bench subset | 3/6 | 3/6（同样 3 题 / same 3 tasks） |
 | 突发负载正确数（2 次运行）/ Burst, correct (2 runs) | 10, 8 of 11 | 9, 9 of 11 |
@@ -34,8 +39,8 @@
 
 ## 发现的主要问题 / Key problems found
 
-完整的 23 条问题（含证据和样本量）、对照组的问题和文章本身的 22 个空白，见报告第 6、7 节。
-See sections 6 and 7 of the report for all 23 problems (with evidence and sample sizes), the baseline's problems, and 22 open questions the article leaves.
+完整的 23 条问题（含证据和样本量）、对照组的问题和文章本身的 22 个空白，见报告第 4、5 节。
+See sections 4 and 5 of the report for all 23 problems (with evidence and sample sizes), the baseline's problems, and 22 open questions the article leaves.
 
 | # | 问题 / Problem | 证据 / Evidence |
 |---|---|---|
@@ -58,8 +63,9 @@ See sections 6 and 7 of the report for all 23 problems (with evidence and sample
 - **模型 / Model**: qwen3.7-plus-2026-05-26
 - **测试项 / Benchmarks**: 编码、SWE-bench 改造子集、噪音流、突发负载、并发、取消、故障恢复、两小时运行、提示词注入、名单外发送者、边界保护、observe 模式、Watchdog 部署配方，以及注意力、成本、可观测性和运维分析 / coding, an adapted SWE-bench subset, noise, burst, concurrency, cancellation, fault recovery, 2-hour run, prompt injection, unlisted senders, boundary protections, observe mode, a watchdog recipe, plus attention, cost, observability and operations analysis
 - **规模 / Scale**: 180 多次正式运行，没测成和无效的运行全部保留 / more than 180 formal runs; unmeasured and invalid runs kept
+- **耗时 / Time**: 前后约 4 天，累计约 77 小时；每项测试正式运行前都按真实时间完整模拟一遍 / about 4 days, ~77 hours; every test was rehearsed end to end in real time before its formal runs
 - **源码 / Source**: 逐行阅读原型源码，报告里关键机制都附文件和行号 / the prototype's source was read line by line; key mechanisms are cited with file and line
-- **数据 / Data**: 15 个脱敏数据文件，覆盖全部测试项 / 15 sanitized data files covering every benchmark
+- **数据 / Data**: 16 个脱敏数据文件，覆盖全部测试项 / 16 sanitized data files covering every benchmark
 
 ## 主要局限 / Main limitations
 

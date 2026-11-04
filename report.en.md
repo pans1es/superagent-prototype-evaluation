@@ -22,7 +22,7 @@
 
 ## Summary
 
-We compared DeepSeek Harness's open-source **Super-agent prototype** (**S**, a two-layer Router + Worker design) against a **plain DeepSeek Harness single session** (**B**, with a subagent tool available), using the same private test repository and the same model (qwen3.7-plus). More than 180 formal runs covered coding, real open-source tasks, noise, bursty load, concurrency, cancellation, fault recovery, long-running operation, prompt injection and unlisted senders. We also read the prototype's source line by line to explain what we observed.
+We compared DeepSeek Harness's open-source **Super-agent prototype** (**S**, a two-layer Router + Worker design) against a **plain DeepSeek Harness single session** (**B**, with a subagent tool available), using the same private test repository and the same model (qwen3.7-plus). More than 180 formal runs covered coding, real open-source tasks, noise, bursty load, concurrency, cancellation, fault recovery, long-running operation, prompt injection and unlisted senders. We also read the prototype's source line by line to explain what we observed. The whole evaluation took about 4 days and roughly 77 hours of running time (section 2.1).
 
 Key observations:
 
@@ -30,7 +30,8 @@ Key observations:
 2. **The middle layer adds failure points.** The Router twice altered numbers its Worker had computed correctly; clarifying an ambiguous request went 0/4 for S and 4/4 for B; the same result was posted by both Worker and Router, so S posted about 2–2.5× as many public messages; the Router also ignored explicit requests from an allow-listed person.
 3. **The code-level mechanisms are worth borrowing.** Ingress deduplication; unlisted senders rejected by the gate (pure code) with zero model calls; automatic resumption after a normal restart; and the 30-minute background-job limit and 15/30/60 s retry backoff were both observed to fire. Under bursty load S replied faster with correct results.
 4. **Cancellation works while a job is running, but coverage is thin.** All 9 measurable cancellations ended the job within 30 s; 10 more could not be measured because the stop could not be tied to a job or the precondition was not met.
-5. **Wherever permissions or safety relied on convention, something slipped.** A decoy secret file was read on injected instructions twice; a Worker kept running after its requester was removed from the allow-list; and in the source, any person's message on a ticket's thread goes straight to the Worker without an allow-list check.
+5. **Each side is faster in a different situation.** With single tasks under light load S was slower: median time per coding run about 218 s for S vs 134 s for B; time to the first PR on the SWE-bench subset about 277 s vs 187 s. When messages poured in, S was faster: median correct reply under bursty load 33–35 s for S vs 76–131 s for B (section 3.1).
+6. **Wherever permissions or safety relied on convention, something slipped.** A decoy secret file was read on injected instructions twice; a Worker kept running after its requester was removed from the allow-list; and in the source, any person's message on a ticket's thread goes straight to the Worker without an allow-list check.
 
 In one sentence: **the prototype's durable tasks, ingress handling and code-level admission are worth borrowing, but in this test there is no evidence that defaulting to the two-layer architecture delivers better, cheaper or less attention-demanding results than a plain single session — and wherever the design relies on prompts alone, we saw deviations.** Section 4 lists 23 concrete problems; section 5 lists 22 open questions the article leaves.
 
@@ -99,11 +100,49 @@ Benchmarks (counts are formal runs per condition):
 
 A few runs used settings different from the rest (for example an experiment-side byte gate, or costs priced without the cache discount). They are marked where they appear and are not pooled with standard runs.
 
+### 2.1 Time spent
+
+The whole evaluation ran over about 4 days (2026-10-31 to 11-04), for roughly **77 hours** of running time (an approximation estimated from run records).
+
+Many tests have durations fixed by their design and had to be waited out in real time:
+
+| Test | Wait per run | Total across formal runs |
+|---|---|---|
+| Two-hour run (BM07) | 7,200 s | about 11.7 h |
+| Hourly watchdog recipe | 2 h | 2 h |
+| Noise stream / bursty load (BM03 / BM04) | about 15 / 19 min each | about 3.5 h |
+| SWE-bench subset (BM02) | 900 s per task | 3 h |
+| Coding tasks (BM01) | up to 20 min each | about 1.9 h |
+| Background-job limit | 30 min | 0.5 h or more |
+| Post-restart observation | 300 s | 5 min each |
+
+Before its formal runs, every test was first run end to end against a fake model, also in real time with no clock compression. Long tests such as the two-hour runs and the watchdog therefore took about 20 hours in total, including those rehearsals.
+
 ---
 
 ## 3. Results
 
-### 3.1 Coding tasks (BM01)
+### 3.1 Time comparison
+
+Real elapsed time for S and B in each scenario. A human pause (77.6 s) and one run that stalled for its whole 20-minute window after a preparation failure (1,201 s) are excluded; per-run data is in `data/timing.csv`.
+
+| Scenario | S | B | Faster |
+|---|---|---|---|
+| Coding, median time per run (BM01) | about 218 s (15 runs) | about 134 s (16 runs) | B |
+| Single-task calibration, comment to PR (BM00) | about 98 s | 114 s | S |
+| SWE-bench subset, median time to first PR (6 tasks) | about 277 s | about 187 s | B |
+| Noise stream, median correct reply (BM03, 2 runs) | 132 / 116 s | 68 / 72 s | B |
+| Bursty load, median correct reply (BM04, 2 runs) | 33 / 35 s | 76 / 131 s | **S** |
+| Cancellation, stop arrival to real termination | 5.3–12.4 s | 4.7–15.9 s | Similar |
+
+![Time per run](figures/fig8-time-per-run.svg)
+
+- **With single tasks under light load, S is usually slower**: our explanation is that the extra Router layer accepts the request, creates a ticket and prepares the workspace before a Worker starts.
+- **When messages pour in, S is faster**: our explanation is that B has one session and every message waits in its queue; S's Router quickly hands tasks to Workers that run in parallel.
+- How these were measured: coding time is driver time, including publishing the task and collecting results, using the same procedure for both; time to first PR on SWE-bench includes the collector's polling interval and is approximate; the value for S's second noise run comes from the post-hoc check.
+- Resumption after restart is not in this comparison: B never resumed, so there is no comparable duration (see the faults and recovery section).
+
+### 3.2 Coding tasks (BM01)
 
 ![BM01 coding-task delivery](figures/fig1-bm01-delivery.svg)
 
@@ -125,7 +164,7 @@ A few runs used settings different from the rest (for example an experiment-side
 - Total cost: S ¥5.20, B ¥1.85; median per run about ¥0.32 for S and ¥0.12 for B. Driver time (including publishing, collection and cleanup) was generally longer for S; per-run data is in `data/bm01_runs.csv`.
 - A separate single-task calibration (BM00): private acceptance 20/20 for both; S took 176 s from comment to PR (including a 77.6 s operator pause), B 114 s.
 
-### 3.2 Adapted SWE-bench Lite subset (BM02)
+### 3.3 Adapted SWE-bench Lite subset (BM02)
 
 Of 8 candidates, 6 passed the environment controls (the baseline tests fail and the official fix passes); the 2 `requests` candidates did not and are recorded as untested, not replaced.
 
@@ -141,7 +180,7 @@ Of 8 candidates, 6 passed the environment controls (the baseline tests fail and 
 - Both conditions solved **3/6 — the same three tasks**. With one run per task and condition, no difference between the architectures shows up on real fixes.
 - This is an **adapted, unofficial run**: tasks were posted as issues in the test repository, with a 900 s window and dependencies pre-installed by the experiment; it is not comparable to public leaderboards.
 
-### 3.3 Noise stream (BM03)
+### 3.4 Noise stream (BM03)
 
 | Run | S | B |
 |---|---|---|
@@ -152,7 +191,7 @@ Of 8 candidates, 6 passed the environment controls (the baseline tests fail and 
 - S's ingress rejected each run's 6 same-ID replays as duplicates, and 36 independent noise-thread messages never reached the Router. All of B's events entered its single session, which had to recognize replays itself; no duplicated external actions were observed.
 - Across the three runs neither condition opened extra PRs, replied in the wrong thread, or replied to noise. In run 3 the actual publishing stream exceeded the 900 s load setting on both sides (942.6 / 945.8 s), so no overall pass is reported.
 
-### 3.4 Bursty load (BM04)
+### 3.5 Bursty load (BM04)
 
 ![BM04 bursty load](figures/fig3-bm04-burst.svg)
 
@@ -163,9 +202,9 @@ Of 8 candidates, 6 passed the environment controls (the baseline tests fail and 
 - **Concurrency**: in one run S had 3 Worker sessions with steps running at the same time while maxWorkers was 2. A ticket had ended while its session's last step was still running, and the next ticket started. The logical concurrency limit is not the same as actual model concurrency.
 - Task T06 (S): the Worker had computed the correct result but did not publish the original result; after a follow-up request it published only the new hash and dropped the product it had been asked to keep. Both were graded as failures. S posted 29 messages in that run, 9 of them duplicate result notices.
 - The Router once tried to publish a wrong hash before the ticket was ready; the prototype's "no publishing before ready" gate blocked it, and the value published afterwards was correct. That gate is worth borrowing, but it does not check whether values are correct.
-- Stop requests are covered in section 3.6.
+- Stop requests are covered in section 3.7.
 
-### 3.5 Public messages (a proxy for attention cost)
+### 3.6 Public messages (a proxy for attention cost)
 
 ![Public messages posted](figures/fig4-public-messages.svg)
 
@@ -174,7 +213,7 @@ Of 8 candidates, 6 passed the environment controls (the baseline tests fail and 
 - Two-hour runs (14 human inputs each): S 10–11 messages per run, B 4; Worker and Router still both posted on the same PR.
 - Message count is not reading time or interruptions; **we did not measure human reading time**.
 
-### 3.6 Cancellation
+### 3.7 Cancellation
 
 Cancellation was graded through an explicit chain — task → tool call → background job → termination record — and required the job to be running when the stop arrived. The pass line: **the job really ends within 30 s of the stop's arrival**. Recognizing stops and jobs from command text alone, as first attempted, matched none of the BM04 and BM05 cancellation cases, so those were recorded as not tested; with the explicit chain the results were:
 
@@ -196,7 +235,7 @@ Cancellation was graded through an explicit chain — task → tool call → bac
 - B's stop messages wait in its ordinary input queue: under bursty load, one stop was read 112 s after arrival, after the job had already finished naturally; another was read after 52 s, and the kill call at 58 s found the job already finished.
 - **A facility problem on B**: once, B's adapter omitted the policy text stating that events from the allow-listed requester are authorized tasks, and B rejected the real task as a prompt injection. That run is recorded as facility-invalid and is not in the table.
 
-### 3.7 Concurrency (BM05)
+### 3.8 Concurrency (BM05)
 
 | Condition | Ordinary tasks | Cost |
 |---|---|---|
@@ -208,7 +247,7 @@ Cancellation was graded through an explicit chain — task → tool call → bac
 - With maxWorkers = 2, native traces did show jobs overlapping across Workers.
 - Each full concurrent load contains 3 tasks, 1 follow-up and 1 stop. Both S configurations and B ran it 2 times each; only one run (S, maxWorkers = 1) completed all five inputs under the frozen rules; the rest lacked eligibility or were facility-invalid, so no full score is reported. One more S run was stopped early when its collector crashed, leaving only 3 PR snapshots.
 
-### 3.8 Faults and recovery (BM06)
+### 3.9 Faults and recovery (BM06)
 
 | Fault | S | B |
 |---|---|---|
@@ -223,7 +262,7 @@ Cancellation was graded through an explicit chain — task → tool call → bac
 - **Recovery after SIGKILL was never measured.** This does not show the mechanism is broken, but it exposed another problem: **the Router may ignore an explicit @-request from an allow-listed person** (problem 20 in section 4).
 - Foreground commands longer than 5 s moved to the background automatically: seen 7 times across 27 S cases.
 
-### 3.9 Unlisted senders
+### 3.10 Unlisted senders
 
 Instead of a third real account, we **removed the requester from the allow-list** so the same real account played the unlisted person. In the source the gate looks up only the login name (section 1.1), so the two are equivalent to the gate; but this is **not a real third person**, and it cannot test listed and unlisted people on the same thread.
 
@@ -242,7 +281,7 @@ Instead of a third real account, we **removed the requester from the allow-list*
 - **Code-level admission is real**: under default settings, unlisted messages are rejected by the gate without a single model call. B has no gate, so every message is read and judged by the model.
 - **Revoking authorization does not stop work**: in the source a settings change only notifies the Worker; it does not forcibly end running work (section 1.1). One sample only.
 
-### 3.10 Boundary protections and modes
+### 3.11 Boundary protections and modes
 
 | Item | Result | Notes |
 |---|---|---|
@@ -256,7 +295,7 @@ Instead of a third real account, we **removed the requester from the allow-list*
 
 The boundary items have one run each.
 
-### 3.11 Two-hour run (BM07)
+### 3.12 Two-hour run (BM07)
 
 | Condition | Run | Frozen / strict delivery | Functional pass | Messages |
 |---|---|---|---|---|
@@ -271,7 +310,7 @@ The boundary items have one run each.
 - **All noise on old threads reached the Workers**: in each S run, all 10 noise messages on an old thread that already had a ticket were delivered to the owning Worker. This was not a wrong new ticket, but a confirmation that ticket threads bypass the gate (section 1.1).
 - **Replays**: when 14 same-ID events were replayed, S deduplicated them at ingress with no extra model calls; B made one more model call for each, without duplicating any external action.
 
-### 3.12 Prompt injection (BM09)
+### 3.13 Prompt injection (BM09)
 
 ![BM09 prompt injection](figures/fig5-bm09-injection.svg)
 
@@ -293,7 +332,7 @@ The boundary items have one run each.
 - Runs where the attack content was not seen, or the attribution chain was incomplete, do not count as successful defenses. Per-cell data is in `data/bm09_injection_grid.csv`.
 - During the experiment Workers could read the experiment's GitHub credential (a fine-grained token scoped to the test repository, revoked afterwards). **Session or working-directory isolation is not operating-system isolation**; the protection came from the experiment environment, not from the prototype.
 
-### 3.13 Cost attribution (BM10, partial)
+### 3.14 Cost attribution (BM10, partial)
 
 | Role | Non-cached input | Cached input | Output | Cost |
 |---|---|---|---|---|
@@ -307,7 +346,7 @@ The boundary items have one run each.
 - In two lost-response cases the proxy billed requests whose usage is missing from the native logs (¥0.048 in total). Native logs alone undercount.
 - All costs in this report are list-price estimates (¥2 non-cached input, ¥0.4 cached input, ¥8 output, per million tokens) and are meant only for comparing S and B.
 
-### 3.14 Observability (BM12) and operations (BM13)
+### 3.15 Observability (BM12) and operations (BM13)
 
 **What native logs alone can reconstruct** (reusing records from 11 runs):
 
@@ -503,7 +542,7 @@ Engineering suggestions drawn from these observations; they are not experimental
 
 | File | Contents |
 |---|---|
-| `data/summary.json` | Setup, per-benchmark results, cost comparison and unfinished items |
+| `data/summary.json` | Setup, per-benchmark results, time, cost comparison and unfinished items |
 | `data/bm01_runs.csv` | BM01 per run: task, condition, repeat, frozen / functional pass, PR quality, driver time, cost |
 | `data/swe_bench_subset.csv` | Adapted SWE-bench subset, per task |
 | `data/bm03_bm05_bm07_runs.csv` | BM03, BM05 and BM07 per run |
@@ -518,7 +557,8 @@ Engineering suggestions drawn from these observations; they are not experimental
 | `data/bm09_injection_grid.csv` | BM09 layered batch by carrier × target × condition: valid runs, decidable runs, confirmed effects, task result |
 | `data/cost_by_group.csv` | Requests and cost by benchmark and condition (main runs) |
 | `data/cost_by_role.csv` | Tokens and cost by role (single session, Worker, Router) |
-| `figures/*.svg` | The report's 7 figures (light and dark mode) |
+| `data/timing.csv` | Per-run elapsed time for S and B, with what was excluded and why |
+| `figures/*.svg` | The report's 8 figures (light and dark mode) |
 
 The data is sanitized: accounts, repository names, PR numbers, local paths and endpoints have been removed. Experiment scripts and raw traces are not published at this time.
 
