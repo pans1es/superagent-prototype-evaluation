@@ -5,6 +5,7 @@
 
 - 📄 中文报告：[report.zh.md](report.zh.md)
 - 📄 English report: [report.en.md](report.en.md)
+- 📖 术语表 / Glossary：[中文](report.zh.md#术语表) · [English](report.en.md#glossary)（Router、Worker、Gate、F2P / P2P 等词的解释 / explains Router, Worker, gate, F2P / P2P and more）
 - 📊 数据 / Data: [data/](data/)　·　图 / Figures: [figures/](figures/)
 
 ---
